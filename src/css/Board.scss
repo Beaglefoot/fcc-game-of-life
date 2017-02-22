@@ -1,0 +1,14 @@
+$cell-size: 14px;
+
+table {
+  margin: 0 auto;
+  border-collapse: collapse;
+}
+
+td {
+  border: 1px solid lightgray;
+  width: $cell-size;
+  height: $cell-size;
+  margin: 0;
+  padding: 0;
+}
