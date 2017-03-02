@@ -4,15 +4,20 @@ import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import { AppContainer } from 'react-hot-loader';
 
+import combinedReducer from './reducers';
 import App from './components/App';
+import { initializeCells } from './actions/cellsActions';
 import './css/style.scss';
 
-const store = createStore(() => ({
-  board: {
-    width: 50,
-    height: 30
-  }
-}));
+const store = createStore(combinedReducer);
+
+const getCellsAmount = ({ width, height }) => width * height;
+
+store.dispatch(
+  initializeCells(getCellsAmount(store.getState().board))
+);
+
+console.log(store.getState().cells);
 
 const render = Component => (
   ReactDOM.render(
