@@ -6,7 +6,7 @@ import { AppContainer } from 'react-hot-loader';
 
 import combinedReducer from './reducers';
 import App from './components/App';
-import { initializeCells, reviveCell } from './actions/cellsActions';
+import { initializeCells } from './actions/cellsActions';
 import './css/style.scss';
 
 const store = createStore(combinedReducer);
@@ -17,8 +17,6 @@ store.dispatch(
   initializeCells(getCellsAmount(store.getState().board))
 );
 
-store.dispatch(reviveCell(2));
-console.log(store.getState().cells);
 
 const render = Component => (
   ReactDOM.render(

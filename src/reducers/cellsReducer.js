@@ -1,5 +1,6 @@
 /*eslint indent: off*/
 import { INITIALIZE_CELLS, REVIVE_CELL } from '../actions/cellsActions';
+import { NEXT_GENERATION } from '../actions/generationActions';
 
 class Cell {
   constructor(id, age = 0) {
@@ -33,6 +34,8 @@ export default function(state = {}, action) {
       return generateCells(payload);
     case REVIVE_CELL:
       return reviveCell(state, payload);
+    case NEXT_GENERATION:
+      return state;
     default:
       return state;
   }
