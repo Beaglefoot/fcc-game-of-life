@@ -9,9 +9,9 @@ class Board extends React.Component {
       <table>
         <tbody>
           {
-            Array(this.props.height).fill(
+            Array(this.props.rows).fill(
               <tr>
-                {Array(this.props.width).fill(<td>{' '}</td>)}
+                {Array(this.props.columns).fill(<td>{' '}</td>)}
               </tr>
             )
           }
