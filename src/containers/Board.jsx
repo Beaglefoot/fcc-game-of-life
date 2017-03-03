@@ -5,15 +5,21 @@ import '../css/Board.scss';
 
 class Board extends React.Component {
   render() {
+    let counter = 0;
+
     return (
       <table>
         <tbody>
           {
-            Array(this.props.rows).fill(
-              <tr>
-                {Array(this.props.columns).fill(<td>{' '}</td>)}
+            new Array(this.props.rows).fill().map((_, index) => (
+              <tr key={index}>
+                {
+                  new Array(this.props.columns).fill().map(() => (
+                    <td key={counter} id={counter++}>{' '}</td>
+                  ))
+                }
               </tr>
-            )
+            ))
           }
         </tbody>
       </table>

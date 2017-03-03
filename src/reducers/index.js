@@ -28,6 +28,51 @@ function reviveCell(cells, id) {
   return updatedCells;
 }
 
+export function getAllNeighborCells(state, id) {
+  const { rows, columns } = state.board;
+  const cellsAmount = rows * columns;
+
+  function getRowDifference(id1, id2) {
+    return Math.floor(id1 / columns) - Math.floor(id2 / columns);
+  }
+
+  function incRow(id) {
+    const newId = id + columns;
+    return newId < cellsAmount ? newId : newId - cellsAmount;
+  }
+
+  function decRow(id) {
+    const newId = id - columns;
+    return newId > 0 ? newId : newId + cellsAmount;
+  }
+
+  function incColumn(id) {
+    const newId = id + 1;
+    return getRowDifference(id, newId) < 0 ? newId - columns : newId;
+  }
+
+  function decColumn(id) {
+    const newId = id - 1;
+    return getRowDifference(id, newId) > 0 ? newId + columns : newId;
+  }
+
+  const upperCellId = incRow(id);
+  const lowerCellId = decRow(id);
+
+  const neighborIds = [
+    decColumn(id),
+    incColumn(id),
+    decColumn(upperCellId),
+    upperCellId,
+    incColumn(upperCellId),
+    decColumn(lowerCellId),
+    lowerCellId,
+    incColumn(lowerCellId)
+  ];
+
+  return state.cells.filter(cell => neighborIds.includes(cell.id));
+}
+
 const initialState = {
   board: defaultBoard,
   cells: generateCells(defaultBoard.rows * defaultBoard.columns),
