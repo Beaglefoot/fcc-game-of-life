@@ -1,6 +1,13 @@
 /*eslint no-unused-vars: off*/
 import { expect } from 'chai';
-import reducer, { generateCells, getAllNeighborCells } from '../../src/reducers';
+import reducer,
+  {
+    generateCells,
+    getAllNeighborCells,
+    countAliveCells,
+    calcNewGeneration,
+    reviveCell
+  } from '../../src/reducers';
 import { REVIVE_CELL } from '../../src/actions/cellsActions';
 import { NEXT_GENERATION } from '../../src/actions/generationActions';
 
@@ -52,19 +59,45 @@ describe('reducer', () => {
     expect(finalState.generation - initialState.generation).to.equal(1);
   });
 
-  // it('should revive cells if conditions are appropriate', () => {
-  //   const someCellsAlive = [0, 1, 2]
-  //     .map(id => ({ id, age: 1 }))
-  //     .concat(initialState.cells.slice(3));
-  //
-  //   const newInitialState = { ...initialState, cells: someCellsAlive };
-  //   const finalState = reducer(newInitialState, NEXT_GENERATION);
-  //
-  //   expect(finalState.cells.find(cell => cell.id === 9).age).to.equal(1);
-  // });
+  it('should revive cells if conditions are appropriate', () => {
+    const someCellsAlive = [0, 1, 2]
+      .map(id => ({ id, age: 1 }))
+      .concat(initialState.cells.slice(3));
+
+    const newInitialState = { ...initialState, cells: someCellsAlive };
+    const finalState = reducer(newInitialState, { type: NEXT_GENERATION });
+
+    expect(finalState.cells.find(cell => cell.id === 9).age).to.equal(1);
+  });
+
+  it('should kill a cell in case of isolation', () => {
+    const cellsSingleAlive = [{ id: 0, age: 1 }]
+      .concat(initialState.cells.slice(1));
+
+    const finalState = reducer(
+      { ...initialState, cells: cellsSingleAlive },
+      { type: NEXT_GENERATION }
+    );
+
+    expect(finalState.cells.find(cell => cell.id === 0).age).to.equal(0);
+  });
+
+  it('should kill a cell in case of overcrowding', () => {
+    const cellsFiveNeighbors = [0, 1, 2, 9, 10]
+      .reduce((cells, id) => reviveCell(cells, id), initialState.cells);
+
+    const finalState = reducer(
+      { ...initialState, cells: cellsFiveNeighbors },
+      { type: NEXT_GENERATION }
+    );
+
+    expect(finalState.cells.find(cell => cell.id === 9).age).to.equal(0);
+  });
 });
 
-describe('getAllNeighborCells helper function', () => {
+
+
+describe('Helper Functions', () => {
   let state = {};
 
   beforeEach(() => {
@@ -77,35 +110,77 @@ describe('getAllNeighborCells helper function', () => {
     };
   });
 
-  it('should return all neighbors for a cell in the middle of a board', () => {
-    const result = getAllNeighborCells(state, 9);
+  describe('getAllNeighborCells', () => {
 
-    expect(result).to.have.length(8);
-    expect(result).to.contain(
-      { id: 0, age: 0 },
-      { id: 1, age: 0 },
-      { id: 2, age: 0 },
-      { id: 8, age: 0 },
-      { id: 10, age: 0 },
-      { id: 16, age: 0 },
-      { id: 17, age: 0 },
-      { id: 18, age: 0 }
-    );
+    it('should return all neighbors for a cell in the middle of a board', () => {
+      const result = getAllNeighborCells(state, 9);
+
+      expect(result).to.have.length(8);
+      expect(result).to.contain(
+        { id: 0, age: 0 },
+        { id: 1, age: 0 },
+        { id: 2, age: 0 },
+        { id: 8, age: 0 },
+        { id: 10, age: 0 },
+        { id: 16, age: 0 },
+        { id: 17, age: 0 },
+        { id: 18, age: 0 }
+      );
+    });
+
+    it('should return all neighbors for a cell at the border', () => {
+      const result = getAllNeighborCells(state, 7);
+
+      expect(result).to.have.length(8);
+      expect(result).to.contain(
+        { id: 6, age: 0 },
+        { id: 15, age: 0 },
+        { id: 14, age: 0 },
+        { id: 63, age: 0 },
+        { id: 62, age: 0 },
+        { id: 0, age: 0 },
+        { id: 8, age: 0 },
+        { id: 56, age: 0 }
+      );
+    });
   });
 
-  it('should return all neighbors for a cell at the border', () => {
-    const result = getAllNeighborCells(state, 7);
+  describe('countAliveCells', () => {
+    it('should return correct amount of alive cells', () => {
+      state.cells
+        .forEach(cell => {
+          if ([0,1,2,10].includes(cell.id)) cell.age = 1;
+        });
 
-    expect(result).to.have.length(8);
-    expect(result).to.contain(
-      { id: 6, age: 0 },
-      { id: 15, age: 0 },
-      { id: 14, age: 0 },
-      { id: 63, age: 0 },
-      { id: 62, age: 0 },
-      { id: 0, age: 0 },
-      { id: 8, age: 0 },
-      { id: 56, age: 0 }
-    );
+      expect(countAliveCells(state, 9)).to.equal(4);
+    });
+  });
+
+  describe('calcNewGeneration', () => {
+    it('should return new cells state which contains revived cells', () => {
+      state.cells = [0, 1, 2]
+        .map(id => ({ id, age: 1 }))
+        .concat(state.cells.slice(3));
+
+      const newCellsState = calcNewGeneration(state);
+      const revivedCells = newCellsState.filter(cell => cell.age > 0);
+
+      expect(newCellsState).to.be.an('array');
+      expect(revivedCells).to.have.length(3);
+      expect(revivedCells).to.contain({ id: 9, age: 1}, { id: 57, age: 1});
+    });
+
+    it('should kill cells in case of isolation', () => {
+      state.cells[1] = { id: 1, age: 1 };
+      expect(calcNewGeneration(state)).to.contain({ id: 1, age: 0 });
+    });
+
+    it('should kill cells in case of overcrowding', () => {
+      [0, 1, 2, 9, 10].forEach(id => state.cells[id] = { id, age: 1 });
+
+      expect(
+        calcNewGeneration(state).find(cell => cell.id === 9)
+      ).to.deep.equal({ id: 9, age: 0 });
+    });
   });
 });

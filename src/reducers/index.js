@@ -16,7 +16,7 @@ export function generateCells(amount) {
     .map((cell, index) => new Cell(index));
 }
 
-function reviveCell(cells, id) {
+export function reviveCell(cells, id) {
   const updatedCells = [...cells];
 
   updatedCells.splice(
@@ -73,6 +73,30 @@ export function getAllNeighborCells(state, id) {
   return state.cells.filter(cell => neighborIds.includes(cell.id));
 }
 
+export function countAliveCells(state, id) {
+  return getAllNeighborCells(state, id)
+    .filter(cell => cell.age > 0)
+    .length;
+}
+
+export function calcNewGeneration(state) {
+  return state.cells.map(cell => {
+    const { id, age } = cell;
+    const count = countAliveCells(state, id);
+
+    // Revive dead cells
+    if (age === 0) {
+      if (count === 3) return { ...cell, age: 1 };
+      else return cell;
+    }
+    // Kill cells
+    else {
+      if (count < 2 || count > 3) return { ...cell, age: 0 };
+      else return { ...cell, age: age + 1 };
+    }
+  });
+}
+
 const initialState = {
   board: defaultBoard,
   cells: generateCells(defaultBoard.rows * defaultBoard.columns),
@@ -88,7 +112,11 @@ export default function(state = initialState, action) {
     case REVIVE_CELL:
       return { ...state, cells: reviveCell(state.cells, action.id) };
     case NEXT_GENERATION:
-      return { ...state, generation: state.generation + 1 };
+      return {
+        ...state,
+        generation: state.generation + 1,
+        cells: calcNewGeneration(state)
+      };
     default:
       return state;
   }
