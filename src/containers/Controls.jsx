@@ -11,6 +11,8 @@ class Controls extends React.Component {
       buttonText: 'Start',
       intervalId: 0
     };
+
+    this.nextGeneration = this.props.nextGeneration.bind(this);
   }
 
   toggleButtonText() {
@@ -38,9 +40,19 @@ class Controls extends React.Component {
 
   render() {
     return (
-      <button onClick={e => this.handleClick(e)}>{this.state.buttonText}</button>
+      <div>
+        <button onClick={e => this.handleClick(e)}>
+          {this.state.buttonText}
+        </button>
+        <button onClick={this.nextGeneration}>nextStep</button>
+        <div>Generation: {this.props.generation}</div>
+      </div>
     );
   }
 }
 
-export default connect(null, { nextGeneration })(Controls);
+function mapStateToProps({ generation }) {
+  return { generation };
+}
+
+export default connect(mapStateToProps, { nextGeneration })(Controls);
