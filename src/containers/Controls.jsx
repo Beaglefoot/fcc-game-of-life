@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { nextGeneration } from '../actions/generationActions';
+import { nextGeneration, resetGeneration } from '../actions/generationActions';
 
 class Controls extends React.Component {
   constructor(props) {
@@ -13,6 +13,7 @@ class Controls extends React.Component {
     };
 
     this.nextGeneration = this.props.nextGeneration.bind(this);
+    this.resetGeneration = this.props.resetGeneration.bind(this);
   }
 
   toggleButtonText() {
@@ -45,6 +46,7 @@ class Controls extends React.Component {
           {this.state.buttonText}
         </button>
         <button onClick={this.nextGeneration}>nextStep</button>
+        <button onClick={this.resetGeneration}>Clear</button>
         <div>Generation: {this.props.generation}</div>
       </div>
     );
@@ -55,4 +57,4 @@ function mapStateToProps({ generation }) {
   return { generation };
 }
 
-export default connect(mapStateToProps, { nextGeneration })(Controls);
+export default connect(mapStateToProps, { nextGeneration, resetGeneration })(Controls);

@@ -1,6 +1,6 @@
 /*eslint indent: off*/
 import { REVIVE_CELL } from '../actions/cellsActions';
-import { NEXT_GENERATION } from '../actions/generationActions';
+import { NEXT_GENERATION, RESET_GENERATION } from '../actions/generationActions';
 
 import defaultBoard from '../defaultBoard';
 
@@ -117,6 +117,8 @@ export default function(state = initialState, action) {
         generation: state.generation + 1,
         cells: calcNewGeneration(state)
       };
+    case RESET_GENERATION:
+      return initialState;
     default:
       return state;
   }
