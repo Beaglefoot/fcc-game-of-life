@@ -9,6 +9,7 @@ import App from './components/App';
 import './css/style.scss';
 
 const store = createStore(reducer);
+store.subscribe(() => console.log(store.getState().cells));
 
 const render = Component => (
   ReactDOM.render(
