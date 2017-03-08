@@ -1,6 +1,6 @@
 /*eslint indent: off*/
 import { REVIVE_CELL, RANDOMIZE_CELLS } from '../actions/cellsActions';
-import { NEXT_GENERATION, RESET_GENERATION } from '../actions/generationActions';
+import { NEXT_GENERATION, RESET_GENERATION, PREVIOUS_GENERATION } from '../actions/generationActions';
 
 import defaultBoard from '../defaultBoard';
 
@@ -106,10 +106,27 @@ function getRandomizedState(state) {
   return { ...state, cells };
 }
 
+function addToHistory(state) {
+  const limit = 40;
+  const { cells, generation } = state;
+  let { history } = state;
+
+  if (history.length >= limit) history = history.slice(0, -1);
+  return [{ cells, generation }].concat(history);
+}
+
+function getStateFromHistory(state) {
+  if (!state.history.length) return state;
+  const history = [ ...state.history ];
+  const { cells, generation } = history.shift();
+  return { ...state, cells, generation, history };
+}
+
 const initialState = {
   board: defaultBoard,
   cells: generateCells(defaultBoard.rows * defaultBoard.columns),
-  generation: 0
+  generation: 0,
+  history: []
 };
 
 
@@ -124,12 +141,15 @@ export default function(state = getRandomizedState(initialState), action) {
       return {
         ...state,
         generation: state.generation + 1,
-        cells: calcNewGeneration(state)
+        cells: calcNewGeneration(state),
+        history: addToHistory(state)
       };
     case RESET_GENERATION:
       return initialState;
     case RANDOMIZE_CELLS:
       return getRandomizedState(state);
+    case PREVIOUS_GENERATION:
+      return getStateFromHistory(state);
     default:
       return state;
   }

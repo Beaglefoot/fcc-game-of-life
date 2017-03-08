@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { randomizeCells } from '../actions/cellsActions';
-import { nextGeneration, resetGeneration } from '../actions/generationActions';
+import { nextGeneration, resetGeneration, previousGeneration } from '../actions/generationActions';
 
 import '../css/Controls.scss';
 
@@ -15,6 +15,7 @@ class Controls extends React.Component {
       intervalId: 0
     };
 
+    this.previousGeneration = this.props.previousGeneration.bind(this);
     this.nextGeneration = this.props.nextGeneration.bind(this);
     this.resetGeneration = this.props.resetGeneration.bind(this);
     this.randomizeCells = this.props.randomizeCells.bind(this);
@@ -57,6 +58,7 @@ class Controls extends React.Component {
         <button onClick={e => this.handleClick(e)}>
           {this.state.buttonText}
         </button>
+        <button onClick={this.previousGeneration}>Prev Step</button>
         <button onClick={this.nextGeneration}>Next Step</button>
         <button onClick={this.resetGeneration}>Clear</button>
         <button onClick={this.randomizeCells}>Randomize</button>
@@ -72,5 +74,5 @@ function mapStateToProps({ generation, cells }) {
 
 export default connect(
   mapStateToProps,
-  { nextGeneration, resetGeneration, randomizeCells }
+  { nextGeneration, resetGeneration, randomizeCells, previousGeneration }
 )(Controls);

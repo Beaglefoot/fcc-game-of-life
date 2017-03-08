@@ -9,7 +9,7 @@ import reducer,
     reviveCell,
   } from '../../src/reducers';
 import { REVIVE_CELL, RANDOMIZE_CELLS } from '../../src/actions/cellsActions';
-import { NEXT_GENERATION } from '../../src/actions/generationActions';
+import { NEXT_GENERATION, PREVIOUS_GENERATION } from '../../src/actions/generationActions';
 
 describe('reducer', () => {
   it('should have default state', () => {
@@ -41,7 +41,8 @@ describe('reducer', () => {
     initialState = {
       board: { rows, columns },
       cells: generateCells(rows * columns),
-      generation: 0
+      generation: 0,
+      history: []
     };
   });
 
@@ -99,6 +100,47 @@ describe('reducer', () => {
 
     expect(finalState.cells).to.have.length(initialState.cells.length);
     expect(finalState).to.not.deep.equal(initialState);
+  });
+
+  it('should create history for previous generation', () => {
+    const someCellsAlive = [0, 1, 2]
+      .map(id => ({ id, age: 1 }))
+      .concat(initialState.cells.slice(3));
+
+    const newInitialState = { ...initialState, cells: someCellsAlive };
+    const finalState = reducer(newInitialState, { type: NEXT_GENERATION });
+
+    expect(finalState).to.include.key('history');
+
+    const { history } = finalState;
+
+    expect(history).to.be.an.array;
+    expect(history).to.have.length(1);
+    expect(history[0]).to.deep.equal({
+      cells: newInitialState.cells,
+      generation: newInitialState.generation
+    });
+  });
+
+  it('should replace current state from history', () => {
+    const someCellsAlive = [0, 1, 2]
+      .map(id => ({ id, age: 1 }))
+      .concat(initialState.cells.slice(3));
+
+    const newInitialState = { ...initialState, cells: someCellsAlive };
+    const firstStepState = reducer(newInitialState, { type: NEXT_GENERATION });
+
+    expect(firstStepState.history).to.have.length(1);
+
+    const secondStepState = reducer(firstStepState, { type: PREVIOUS_GENERATION });
+
+    expect(secondStepState).to.include.keys('board', 'cells', 'generation', 'history');
+
+    const { cells, generation, history } = secondStepState;
+
+    expect(history).to.have.length(0);
+    expect(generation).to.equal(firstStepState.history[0].generation);
+    expect(cells).to.deep.equal(firstStepState.history[0].cells);
   });
 });
 
