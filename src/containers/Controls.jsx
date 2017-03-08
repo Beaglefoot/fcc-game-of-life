@@ -24,15 +24,27 @@ class Controls extends React.Component {
     });
   }
 
+  checkAliveCells() {
+    return this.props.cells.some(cell => cell.age > 0);
+  }
+
   handleClick() {
     this.toggleButtonText();
 
-    if (this.state.intervalId) {
+    const stopGame = () => {
       clearInterval(this.state.intervalId);
       this.setState({ intervalId: 0 });
-    }
+    };
+
+    if (this.state.intervalId) stopGame();
     else {
-      const intervalId = setInterval(this.nextGeneration, 700);
+      const intervalId = setInterval(() => {
+        if (this.checkAliveCells()) this.nextGeneration();
+        else {
+          stopGame();
+          this.toggleButtonText();
+        }
+      }, 700);
       this.setState({ intervalId });
     }
   }
@@ -52,8 +64,8 @@ class Controls extends React.Component {
   }
 }
 
-function mapStateToProps({ generation }) {
-  return { generation };
+function mapStateToProps({ generation, cells }) {
+  return { generation, cells };
 }
 
 export default connect(
