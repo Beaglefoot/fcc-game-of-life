@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
+import { randomizeCells } from '../actions/cellsActions';
 import { nextGeneration, resetGeneration } from '../actions/generationActions';
 
 class Controls extends React.Component {
@@ -14,6 +15,7 @@ class Controls extends React.Component {
 
     this.nextGeneration = this.props.nextGeneration.bind(this);
     this.resetGeneration = this.props.resetGeneration.bind(this);
+    this.randomizeCells = this.props.randomizeCells.bind(this);
   }
 
   toggleButtonText() {
@@ -30,11 +32,7 @@ class Controls extends React.Component {
       this.setState({ intervalId: 0 });
     }
     else {
-      const intervalId = setInterval(() => {
-        console.log('tick');
-        this.props.nextGeneration();
-      }, 1000);
-
+      const intervalId = setInterval(this.nextGeneration, 700);
       this.setState({ intervalId });
     }
   }
@@ -47,6 +45,7 @@ class Controls extends React.Component {
         </button>
         <button onClick={this.nextGeneration}>nextStep</button>
         <button onClick={this.resetGeneration}>Clear</button>
+        <button onClick={this.randomizeCells}>Randomize</button>
         <div>Generation: {this.props.generation}</div>
       </div>
     );
@@ -57,4 +56,7 @@ function mapStateToProps({ generation }) {
   return { generation };
 }
 
-export default connect(mapStateToProps, { nextGeneration, resetGeneration })(Controls);
+export default connect(
+  mapStateToProps,
+  { nextGeneration, resetGeneration, randomizeCells }
+)(Controls);

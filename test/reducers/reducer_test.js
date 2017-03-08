@@ -6,9 +6,9 @@ import reducer,
     getAllNeighborCells,
     countAliveCells,
     calcNewGeneration,
-    reviveCell
+    reviveCell,
   } from '../../src/reducers';
-import { REVIVE_CELL } from '../../src/actions/cellsActions';
+import { REVIVE_CELL, RANDOMIZE_CELLS } from '../../src/actions/cellsActions';
 import { NEXT_GENERATION } from '../../src/actions/generationActions';
 
 describe('reducer', () => {
@@ -92,6 +92,13 @@ describe('reducer', () => {
     );
 
     expect(finalState.cells.find(cell => cell.id === 9).age).to.equal(0);
+  });
+
+  it('should create random cells on board', () => {
+    const finalState = reducer(initialState, { type: RANDOMIZE_CELLS });
+
+    expect(finalState.cells).to.have.length(initialState.cells.length);
+    expect(finalState).to.not.deep.equal(initialState);
   });
 });
 

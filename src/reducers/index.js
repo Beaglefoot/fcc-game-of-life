@@ -1,5 +1,5 @@
 /*eslint indent: off*/
-import { REVIVE_CELL } from '../actions/cellsActions';
+import { REVIVE_CELL, RANDOMIZE_CELLS } from '../actions/cellsActions';
 import { NEXT_GENERATION, RESET_GENERATION } from '../actions/generationActions';
 
 import defaultBoard from '../defaultBoard';
@@ -97,6 +97,15 @@ export function calcNewGeneration(state) {
   });
 }
 
+function getRandomInt(min, max) {
+  return Math.floor(Math.random() * (max - min)) + min;
+}
+
+function getRandomizedState(state) {
+  const cells = state.cells.map(cell => ({ ...cell, age: getRandomInt(0, 2) }));
+  return { ...state, cells };
+}
+
 const initialState = {
   board: defaultBoard,
   cells: generateCells(defaultBoard.rows * defaultBoard.columns),
@@ -105,7 +114,7 @@ const initialState = {
 
 
 
-export default function(state = initialState, action) {
+export default function(state = getRandomizedState(initialState), action) {
   if (!action) return state;
 
   switch(action.type) {
@@ -119,6 +128,8 @@ export default function(state = initialState, action) {
       };
     case RESET_GENERATION:
       return initialState;
+    case RANDOMIZE_CELLS:
+      return getRandomizedState(state);
     default:
       return state;
   }
