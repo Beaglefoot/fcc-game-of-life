@@ -13,6 +13,14 @@ class Board extends React.Component {
     event.target.classList.add('alive');
   }
 
+  assignCellClass(id) {
+    const age = this.props.cells.find(cell => cell.id === id).age;
+
+    if (age === 0) return 'dead';
+    if (age === 1) return 'young';
+    else return 'mature';
+  }
+
   render() {
     let counter = 0;
 
@@ -25,9 +33,7 @@ class Board extends React.Component {
                 {
                   new Array(this.props.board.columns).fill().map(() => (
                     <td
-                      className={
-                        this.props.cells.find(cell => cell.id === counter).age > 0 ? 'alive' : 'dead'
-                      }
+                      className={this.assignCellClass(counter)}
                       key={counter}
                       id={counter++}
                     >

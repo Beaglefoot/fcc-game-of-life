@@ -1,4 +1,7 @@
 $cell-size: 14px;
+$pale: #EAFDE6;
+$light-green: #BEF202;
+$green:#88C425;
 
 table {
   margin: 0 auto;
@@ -6,13 +9,17 @@ table {
 }
 
 td {
-  border: 1px solid lightgray;
+  border: 1px solid $pale;
   width: $cell-size;
   height: $cell-size;
   margin: 0;
   padding: 0;
 }
 
-.alive {
-  background: pink;
+.young {
+  background: $light-green;
+}
+
+.mature {
+  background: $green;
 }

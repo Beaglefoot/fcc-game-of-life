@@ -1,5 +1,12 @@
+$dark-blue: #1B676B;
+
 .container {
-  margin: 5% auto;
+  margin: 3% auto;
   max-width: 800px;
   text-align: center;
+}
+
+* {
+  color: $dark-blue;
+  font-family: 'Lato', sans-serif;
 }

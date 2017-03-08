@@ -97,12 +97,12 @@ export function calcNewGeneration(state) {
   });
 }
 
-function getRandomInt(min, max) {
-  return Math.floor(Math.random() * (max - min)) + min;
+function getRandomInt(min, max, modifier) {
+  return Math.floor(Math.random() * modifier * (max - min)) + min;
 }
 
 function getRandomizedState(state) {
-  const cells = state.cells.map(cell => ({ ...cell, age: getRandomInt(0, 2) }));
+  const cells = state.cells.map(cell => ({ ...cell, age: getRandomInt(0, 2, 0.6) }));
   return { ...state, cells };
 }
 

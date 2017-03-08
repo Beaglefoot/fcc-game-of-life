@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import { randomizeCells } from '../actions/cellsActions';
 import { nextGeneration, resetGeneration } from '../actions/generationActions';
 
+import '../css/Controls.scss';
+
 class Controls extends React.Component {
   constructor(props) {
     super(props);
@@ -44,21 +46,21 @@ class Controls extends React.Component {
           stopGame();
           this.toggleButtonText();
         }
-      }, 700);
+      }, 200);
       this.setState({ intervalId });
     }
   }
 
   render() {
     return (
-      <div>
+      <div className="controls">
         <button onClick={e => this.handleClick(e)}>
           {this.state.buttonText}
         </button>
-        <button onClick={this.nextGeneration}>nextStep</button>
+        <button onClick={this.nextGeneration}>Next Step</button>
         <button onClick={this.resetGeneration}>Clear</button>
         <button onClick={this.randomizeCells}>Randomize</button>
-        <div>Generation: {this.props.generation}</div>
+        <div className="counter">Generation: {this.props.generation}</div>
       </div>
     );
   }
