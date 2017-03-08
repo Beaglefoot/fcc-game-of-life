@@ -143,6 +143,22 @@ describe('Helper Functions', () => {
         { id: 56, age: 0 }
       );
     });
+
+    it('should return all neighbors for a cell#8', () => {
+      const result = getAllNeighborCells(state, 8);
+
+      expect(result).to.have.length(8);
+      expect(result).to.contain(
+        { id: 0, age: 0 },
+        { id: 1, age: 0 },
+        { id: 7, age: 0 },
+        { id: 9, age: 0 },
+        { id: 16, age: 0 },
+        { id: 17, age: 0 },
+        { id: 15, age: 0 },
+        { id: 23, age: 0 }
+      );
+    });
   });
 
   describe('countAliveCells', () => {
@@ -168,6 +184,21 @@ describe('Helper Functions', () => {
       expect(newCellsState).to.be.an('array');
       expect(revivedCells).to.have.length(3);
       expect(revivedCells).to.contain({ id: 9, age: 1}, { id: 57, age: 1});
+    });
+
+    it('should revive cell#8', () => {
+      const cells = state.cells.map(cell => (
+        [1, 9, 17].includes(cell.id) ? { ...cell, age: 1 } : cell
+      ));
+      state = { ...state, cells };
+
+      expect(getAllNeighborCells(state, 8)).to.have.length(8);
+      expect(countAliveCells(state, 8)).to.equal(3);
+
+      const newCellsState = calcNewGeneration(state);
+      const revivedCells = newCellsState.filter(cell => cell.age > 0);
+
+      expect(revivedCells).to.contain({ id: 8, age: 1 });
     });
 
     it('should kill cells in case of isolation', () => {

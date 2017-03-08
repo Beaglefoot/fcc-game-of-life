@@ -43,7 +43,7 @@ export function getAllNeighborCells(state, id) {
 
   function decRow(id) {
     const newId = id - columns;
-    return newId > 0 ? newId : newId + cellsAmount;
+    return newId >= 0 ? newId : newId + cellsAmount;
   }
 
   function incColumn(id) {
@@ -56,8 +56,8 @@ export function getAllNeighborCells(state, id) {
     return getRowDifference(id, newId) > 0 ? newId + columns : newId;
   }
 
-  const upperCellId = incRow(id);
-  const lowerCellId = decRow(id);
+  const upperCellId = decRow(id);
+  const lowerCellId = incRow(id);
 
   const neighborIds = [
     decColumn(id),
