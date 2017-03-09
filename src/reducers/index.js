@@ -82,11 +82,17 @@ function getAllNeighborCellIdsMemo() {
 export const getAllNeighborCellIds = getAllNeighborCellIdsMemo();
 
 export function countAliveCells(state, id) {
-  const neighborIds = getAllNeighborCellIds(state, id);
+  let neighborIds = [...getAllNeighborCellIds(state, id)];
 
-  return state.cells
-    .filter(cell => neighborIds.includes(cell.id) && cell.age > 0)
-    .length;
+  let cells = [];
+  let len = neighborIds.length;
+
+  state.cells.some(cell => {
+    if (neighborIds.includes(cell.id)) cells.push(cell);
+    if (cells.length === len) return true;
+  });
+
+  return cells.filter(cell => cell.age > 0).length;
 }
 
 export function calcNewGeneration(state) {
