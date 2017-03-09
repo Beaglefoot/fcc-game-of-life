@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import reducer,
   {
     generateCells,
-    getAllNeighborCells,
+    getAllNeighborCellIds,
     countAliveCells,
     calcNewGeneration,
     reviveCell,
@@ -159,54 +159,27 @@ describe('Helper Functions', () => {
     };
   });
 
-  describe('getAllNeighborCells', () => {
+  describe('getAllNeighborCellIds', () => {
 
-    it('should return all neighbors for a cell in the middle of a board', () => {
-      const result = getAllNeighborCells(state, 9);
+    it('should return all neighbor IDs for a cell in the middle of a board', () => {
+      const result = getAllNeighborCellIds(state, 9);
 
       expect(result).to.have.length(8);
-      expect(result).to.contain(
-        { id: 0, age: 0 },
-        { id: 1, age: 0 },
-        { id: 2, age: 0 },
-        { id: 8, age: 0 },
-        { id: 10, age: 0 },
-        { id: 16, age: 0 },
-        { id: 17, age: 0 },
-        { id: 18, age: 0 }
-      );
+      expect(result).to.contain(0, 1, 2, 8, 10, 16, 17, 18);
     });
 
     it('should return all neighbors for a cell at the border', () => {
-      const result = getAllNeighborCells(state, 7);
+      const result = getAllNeighborCellIds(state, 7);
 
       expect(result).to.have.length(8);
-      expect(result).to.contain(
-        { id: 6, age: 0 },
-        { id: 15, age: 0 },
-        { id: 14, age: 0 },
-        { id: 63, age: 0 },
-        { id: 62, age: 0 },
-        { id: 0, age: 0 },
-        { id: 8, age: 0 },
-        { id: 56, age: 0 }
-      );
+      expect(result).to.contain(6, 15, 14, 63, 62, 0, 8, 56);
     });
 
     it('should return all neighbors for a cell#8', () => {
-      const result = getAllNeighborCells(state, 8);
+      const result = getAllNeighborCellIds(state, 8);
 
       expect(result).to.have.length(8);
-      expect(result).to.contain(
-        { id: 0, age: 0 },
-        { id: 1, age: 0 },
-        { id: 7, age: 0 },
-        { id: 9, age: 0 },
-        { id: 16, age: 0 },
-        { id: 17, age: 0 },
-        { id: 15, age: 0 },
-        { id: 23, age: 0 }
-      );
+      expect(result).to.contain(0, 1, 7, 9, 16, 17, 15, 23);
     });
   });
 
@@ -241,7 +214,7 @@ describe('Helper Functions', () => {
       ));
       state = { ...state, cells };
 
-      expect(getAllNeighborCells(state, 8)).to.have.length(8);
+      expect(getAllNeighborCellIds(state, 8)).to.have.length(8);
       expect(countAliveCells(state, 8)).to.equal(3);
 
       const newCellsState = calcNewGeneration(state);
