@@ -23,3 +23,9 @@ td {
 .mature {
   background: $green;
 }
+
+.dead {
+  &:hover {
+    background: $pale;
+  }
+}
