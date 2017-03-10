@@ -53,13 +53,13 @@ class Controls extends React.Component {
   render() {
     return (
       <div className="controls">
-        <button onClick={e => this.handleClick(e)}>
+        <button className="start" onClick={e => this.handleClick(e)}>
           {this.state.buttonText}
         </button>
-        <button onClick={this.previousGeneration}>Prev Step</button>
-        <button onClick={this.nextGeneration}>Next Step</button>
-        <button onClick={this.resetGeneration}>Clear</button>
-        <button onClick={this.randomizeCells}>Randomize</button>
+        <button className="prev" onClick={this.previousGeneration}>Prev Step</button>
+        <button className="next" onClick={this.nextGeneration}>Next Step</button>
+        <button className="clear" onClick={this.resetGeneration}>Clear</button>
+        <button className="randomize" onClick={this.randomizeCells}>Randomize</button>
         <div className="counter">Generation: {this.props.generation}</div>
       </div>
     );
