@@ -6,6 +6,8 @@ import '../css/Board.scss';
 
 class Board extends React.Component {
   handleClick(event) {
+    if (event.target.tagName !== 'TD') return;
+
     this.props.reviveCell(
       parseInt(event.target.getAttribute('id'))
     );
@@ -36,9 +38,7 @@ class Board extends React.Component {
                       className={this.assignCellClass(counter)}
                       key={counter}
                       id={counter++}
-                    >
-                      {' '}
-                    </td>
+                    />
                   ))
                 }
               </tr>
