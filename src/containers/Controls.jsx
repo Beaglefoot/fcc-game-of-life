@@ -4,8 +4,6 @@ import { connect } from 'react-redux';
 import { randomizeCells } from '../actions/cellsActions';
 import { nextGeneration, resetGeneration, previousGeneration } from '../actions/generationActions';
 
-import '../css/Controls.scss';
-
 class Controls extends React.Component {
   constructor(props) {
     super(props);

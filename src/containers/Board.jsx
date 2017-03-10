@@ -2,7 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { reviveCell } from '../actions/cellsActions';
-import '../css/Board.scss';
 
 class Board extends React.Component {
   handleClick(event) {

@@ -1,4 +1,10 @@
+$cell-size: 14px;
+
 $dark-blue: #1B676B;
+$pale: #EAFDE6;
+$light-green: #BEF202;
+$green:#88C425;
+$dark-green: #519548;
 
 .container {
   margin: 3% auto;
@@ -9,4 +15,56 @@ $dark-blue: #1B676B;
 * {
   color: $dark-blue;
   font-family: 'Lato', sans-serif;
+}
+
+// Board
+table {
+  margin: 0 auto;
+  border-collapse: collapse;
+}
+
+td {
+  border: 1px solid $pale;
+  width: $cell-size;
+  height: $cell-size;
+  margin: 0;
+  padding: 0;
+}
+
+.young {
+  background: $light-green;
+}
+
+.mature {
+  background: $green;
+}
+
+.dead {
+  &:hover {
+    background: $pale;
+  }
+}
+
+// Controls
+.controls {
+  margin-top: 3%;
+
+  button {
+    margin: 3px;
+    padding: 5px 8px;
+    border: none;
+    border-radius: 6px;
+    background: $pale;
+    font-size: 14px;
+    cursor: pointer;
+
+    &:hover {
+      background: $dark-green;
+      color: white;
+    }
+  }
+}
+
+.counter {
+  margin-top: 2%;
 }
