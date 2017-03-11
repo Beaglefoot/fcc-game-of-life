@@ -1,0 +1,34 @@
+$dark-ocean: #3B8686;
+$dark-blue: #1B676B;
+$dark-green: #519548;
+$green: #88C425;
+
+@mixin rotate($degree) {
+  -webkit-transform: rotate($degree);
+  -moz-transform: rotate($degree);
+  -ms-transform: rotate($degree);
+  transform: rotate($degree);
+}
+
+.signature {
+  position: fixed;
+  right: 0.4em;
+  bottom: 0.1em;
+  font-family: 'VT323';
+  font-size: 14px;
+  color: rgba($dark-blue, .45);
+  a {
+    font-family: inherit;
+    text-decoration: none;
+    outline: none;
+    color: rgba($green, .65);
+  }
+}
+
+@media screen and (min-width: 500px) {
+  .signature {
+    right: -1.5em;
+    bottom: 3em;
+    @include rotate(-90deg);
+  }
+}
