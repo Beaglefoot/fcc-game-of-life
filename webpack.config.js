@@ -9,7 +9,9 @@ const webpack = require('webpack');
 const readFileSync = require('fs').readFileSync;
 const babelrc = JSON.parse(readFileSync('.babelrc', 'utf8'));
 const esIndex = babelrc.presets.findIndex(e => e === 'es2015');
+
 babelrc.presets[esIndex] = [ 'es2015', { 'modules': false } ];
+babelrc.plugins.push('react-hot-loader/babel');
 
 module.exports = {
   entry: [
